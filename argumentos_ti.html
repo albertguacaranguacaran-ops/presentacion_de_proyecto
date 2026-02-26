@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Defensa Técnica MDM – Tiendas Daka</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --daka-yellow: #FFDD00;
+            --daka-blue: #003087;
+            --daka-red: #E3000F;
+            --bg: var(--daka-yellow);
+            --card: #FFFFFF;
+            --text: #003087;
+            --muted: #4B5A7D;
+            --border: rgba(0, 48, 135, 0.15);
+
+            --red: var(--daka-red);
+            --green: #00A650;
+            --blue: #005AEE;
+            --yellow: #D48800;
+            --purple: #8E44AD;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* SLIDES */
+        .deck {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 130px 64px 80px 64px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .5s, transform .5s;
+            transform: translateX(60px);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar check */
+        .slide::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .slide::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 5px;
+        }
+
+        .slide::-webkit-scrollbar-thumb {
+            background: var(--daka-blue);
+            border-radius: 5px;
+            border: 2px solid var(--bg);
+        }
+
+        .slide::-webkit-scrollbar-thumb:hover {
+            background: #002266;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateX(0);
+        }
+
+        .slide.exit {
+            opacity: 0;
+            transform: translateX(-60px);
+        }
+
+        /* NAV */
+        nav {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            z-index: 99;
+            background: var(--daka-yellow);
+            border: 3px solid var(--daka-blue);
+            padding: 10px 24px;
+            border-radius: 50px;
+            box-shadow: 0 8px 25px rgba(255, 221, 0, 0.4);
+            width: max-content;
+            max-width: 95vw;
+        }
+
+        nav button {
+            background: transparent;
+            border: 1px solid rgba(0, 48, 135, 0.2);
+            color: var(--daka-blue);
+            cursor: pointer;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            padding: 8px 18px;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        nav button:hover {
+            background: rgba(0, 48, 135, 0.05);
+            border-color: var(--daka-blue);
+        }
+
+        nav button.active {
+            color: #fff;
+            background: var(--daka-blue);
+            border-color: var(--daka-blue);
+            box-shadow: 0 4px 12px rgba(0, 48, 135, 0.3);
+        }
+
+        .progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 5px;
+            background: var(--daka-yellow);
+            transition: width .4s;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(255, 221, 0, 0.3);
+        }
+
+        .slide-num {
+            position: fixed;
+            bottom: 24px;
+            right: 32px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--muted);
+            background: var(--card);
+            padding: 6px 14px;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+        }
+
+        /* TYPOGRAPHY */
+        .tag {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--card);
+            background: var(--daka-red);
+            padding: 6px 14px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 10px rgba(227, 0, 15, 0.2);
+        }
+
+        h1 {
+            font-size: clamp(36px, 5vw, 64px);
+            font-weight: 900;
+            line-height: 1.1;
+            text-align: center;
+            color: var(--daka-blue);
+            letter-spacing: -1px;
+        }
+
+        h2 {
+            font-size: clamp(28px, 3.5vw, 44px);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            color: var(--daka-blue);
+            letter-spacing: -0.5px;
+            text-align: center;
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--daka-blue);
+        }
+
+        p {
+            font-size: 16px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .red {
+            color: var(--red);
+        }
+
+        .green {
+            color: var(--green);
+        }
+
+        .blue {
+            color: var(--blue);
+        }
+
+        .yellow {
+            color: var(--yellow);
+        }
+
+        .purple {
+            color: var(--purple);
+        }
+
+        /* GRIDS & CARDS */
+        .grid2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            width: 100%;
+            max-width: 960px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 48, 135, 0.05);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            border-radius: 16px 16px 0 0;
+            background: var(--daka-blue);
+        }
+
+        .card.red::before {
+            background: var(--red);
+        }
+
+        .card.green::before {
+            background: var(--green);
+        }
+
+        /* EXTRAS */
+        #s0 {
+            background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.4) 0%, transparent 50%), radial-gradient(circle at bottom left, rgba(0, 48, 135, 0.05) 0%, transparent 50%);
+        }
+
+        .logo-text {
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--daka-blue);
+            margin-bottom: 24px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: var(--muted);
+            margin-top: 20px;
+            max-width: 650px;
+            text-align: center;
+        }
+
+        /* PROCESS MAP */
+        .process-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1100px;
+            margin-top: 20px;
+            gap: 24px;
+        }
+
+        .process-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            gap: 16px;
+        }
+
+        .process-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .process-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            flex: 1;
+            text-align: center;
+            border: 2px solid var(--border);
+            box-shadow: 0 4px 15px rgba(0, 48, 135, 0.05);
+        }
+
+        .process-card.source {
+            border-top: 4px solid var(--daka-blue);
+        }
+
+        .process-card.mainsource {
+            border: 4px solid var(--daka-red);
+            transform: scale(1.05);
+            background: rgba(227, 0, 15, 0.03);
+        }
+
+        .process-card.hub {
+            border: 4px solid var(--daka-yellow);
+            background: var(--daka-blue);
+            color: white;
+            padding: 24px;
+            max-width: 500px;
+        }
+
+        .process-card.hub h3,
+        .process-card.hub p {
+            color: white;
+        }
+
+        .process-card.consumer {
+            border-top: 4px solid var(--green);
+        }
+
+        .arrow-down {
+            font-size: 24px;
+            color: var(--daka-red);
+            font-weight: bold;
+        }
+
+        .diff-box {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            width: 100%;
+            max-width: 450px;
+            border-top: 6px solid var(--daka-blue);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .diff-box.gov {
+            border-top: 6px solid var(--green);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="progress" id="progress"></div>
+    <div class="slide-num" id="slideNum"></div>
+
+    <div class="deck">
+
+        <!-- ═══════════════════ SLIDE 0: PORTADA ═══════════════════ -->
+        <div class="slide active" id="s0">
+            <div class="logo-text">Daka<span style="color:var(--daka-red)">.</span></div>
+            <div class="tag" style="background:var(--daka-blue);color:white">Defensa de Arquitectura Técnica TI</div>
+            <h1>¿Por qué un <span style="color:white;text-shadow: 2px 2px 4px rgba(0,0,0,0.2)">MDM Hub</span>
+                Independiente?</h1>
+            <p class="subtitle" style="color:var(--daka-blue);font-weight:600">
+                Argumentación Técnica · Performance · Gobernanza · Escalabilidad
+            </p>
+            <div style="margin-top:40px;display:flex;gap:20px">
+                <div
+                    style="background:rgba(0,48,135,0.1);padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;color:var(--daka-blue)">
+                    🏢 +30 Empresas Integradas
+                </div>
+                <div
+                    style="background:rgba(227,0,15,0.1);padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;color:var(--daka-red)">
+                    📊 95% de Data Existente
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════ SLIDE 1: EL ELEFANTE EN LA HABITACIÓN ═══════════════════ -->
+        <div class="slide" id="s1">
+            <div class="tag">Pregunta Estratégica TI</div>
+            <h2>El Elefante en la Sala de TI</h2>
+            <div class="card red"
+                style="max-width:900px;width:100%;padding:40px;text-align:center;margin-bottom:20px;border: 3px solid var(--daka-red)">
+                <h3 style="font-size:24px;color:var(--daka-red);margin-bottom:16px">"Si SBO_TIENDAS_DAKA_PROD ya tiene
+                    el 95% de la data requerida... ¿Por qué tú propones crear una base de datos nueva?"</h3>
+                <p style="font-size:16px;color:var(--text);font-weight:600">Es la pregunta correcta. Y la respuesta no
+                    es sobre crear datos desde cero, es sobre <strong>Distribución Inteligente y Protección del
+                        Core.</strong></p>
+            </div>
+            <p style="text-align:center;max-width:700px;font-weight:500;color:var(--daka-blue)">
+                Tenemos +30 empresas consolidadas. Tocar la base de datos de producción para añadir métricas web,
+                logísticas o fotos es un riesgo operacional inaceptable.
+            </p>
+        </div>
+
+        <!-- ═══════════════════ SLIDE 2: ARGUMENTO 1 - EL ESCUDO ═══════════════════ -->
+        <div class="slide" id="s2">
+            <div class="tag">Argumento 1 · Infraestructura</div>
+            <h2>El Escudo de <span
+                    style="background:white;padding:0 10px;border-radius:8px;color:var(--daka-red)">Rendimiento</span>
+                (Performance)</h2>
+            <p style="max-width:800px;text-align:center;margin-bottom:24px">Imagina un Black Friday. E-Commerce, TMS,
+                WMS y Leafio consultando miles de SKUs por minuto.</p>
+
+            <div class="grid2" style="max-width:1000px">
+                <div class="card red" style="background:rgba(255,255,255,0.8)">
+                    <h3 class="red">❌ Usar Producción (SBO_PROD)</h3>
+                    <p style="font-size:13px;margin-bottom:10px">Conectar todo directo al ERP significa que las
+                        consultas de la web compiten con las cajeras reales.</p>
+                    <ul style="font-size:12px;margin-left:20px;color:var(--text);line-height:1.6">
+                        <li><strong>Colapso de Facturación:</strong> Los picos de tráfico web deprimen el rendimiento en
+                            las cajas de la tienda física.</li>
+                        <li><strong>Bloqueo de Tablas:</strong> Extracciones masivas de Leafio pueden ponerLocks sobre
+                            la OITM.</li>
+                        <li><strong>Latencia Crítica:</strong> Lentitud general para la operación contable.</li>
+                    </ul>
+                </div>
+
+                <div class="card green" style="background:white">
+                    <h3 class="green">✅ El MDM Hub como Escudo</h3>
+                    <p style="font-size:13px;margin-bottom:10px">El MDM toma el 95% que ya existe de noche (o
+                        programado), y actúa como un caché de alto rendimiento.</p>
+                    <ul style="font-size:12px;margin-left:20px;color:var(--text);line-height:1.6">
+                        <li><strong>Cero Impacto al ERP:</strong> E-commerce y logística consultan al MDM, dejando la BD
+                            Producción intacta.</li>
+                        <li><strong>Alta Disponibilidad:</strong> Las transacciones de las 30+ empresas fluyen sin
+                            tropiezos.</li>
+                        <li><strong>Consultas Optimizadas:</strong> Estructura Plana diseñada para lectura rápida
+                            externa, no estructura relacional densa.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════ SLIDE 3: ARGUMENTO 2 - EL ULTIMO 5% ═══════════════════ -->
+        <div class="slide" id="s3">
+            <div class="tag">Argumento 2 · Flexibilidad</div>
+            <h2>El Problema del <span
+                    style="background:white;padding:0 10px;border-radius:8px;color:var(--daka-blue)">Último 5%</span>
+            </h2>
+            <p style="max-width:800px;text-align:center;margin-bottom:24px">Ese 5% faltante no es contable ni
+                transaccional. Es <strong>marketing y logística fina</strong>.</p>
+
+            <div class="card" style="max-width:900px;width:100%">
+                <div style="display:flex;align-items:center;gap:30px">
+                    <div style="font-size:64px">🧩</div>
+                    <div>
+                        <h3 style="margin-bottom:8px">Evitar la Basura en SAP (UDF Overload)</h3>
+                        <p style="font-size:14px;color:var(--text);margin-bottom:12px">
+                            Para agregar largos textos SEO para la web, links de videos de YouTube, dimensiones
+                            milimétricas o categorías de temporada, tendríamos que llenar `SBO_TIENDAS_DAKA_PROD` de
+                            decenas de UDFs (User Defined Fields).
+                        </p>
+                        <p style="font-size:14px;color:var(--text);font-weight:600">
+                            Con SBD_MDM_MASTER, el 95% viene de SAP, y el equipo Comercial añade el 5% (texto, fotos)
+                            directamente en el MDM. Mantenemos nuestro ERP limpio y estrictamente financiero/operativo.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════ SLIDE 4: TENER VS GOBERNAR ═══════════════════ -->
+        <div class="slide" id="s4">
+            <div class="tag">Argumento Central</div>
+            <h2>"Tener el dato" vs "Gobernar el dato"</h2>
+            <p style="max-width:800px;text-align:center;margin-bottom:24px">La diferencia entre almacenar y dirigir la
+                operación.</p>
+
+            <div style="display:flex;gap:30px;width:100%;max-width:960px">
+                <div class="diff-box">
+                    <div style="text-align:center;margin-bottom:16px">
+                        <span style="font-size:32px">🗄️</span>
+                        <h3 style="margin-top:8px;color:var(--daka-blue)">Tener el Dato (SAP Puro)</h3>
+                    </div>
+                    <ul style="font-size:14px;color:var(--text);line-height:1.8;padding-left:16px">
+                        <li>"El peso del TV existe en OITM."</li>
+                        <li>Si alguien se equivoca y pone <strong>500kg</strong> en lugar de <strong>5kg</strong>, el
+                            error pasa directo al E-commerce y calcula un flete de $1,000.</li>
+                        <li>No evalúa si la descripción comercial está vacía. Simplemente lo publica y se pierde la
+                            venta.</li>
+                    </ul>
+                </div>
+
+                <div class="diff-box gov">
+                    <div style="text-align:center;margin-bottom:16px">
+                        <span style="font-size:32px">⚖️</span>
+                        <h3 style="margin-top:8px;color:var(--green)">Gobernar el Dato (MDM Hub)</h3>
+                    </div>
+                    <ul style="font-size:14px;color:var(--text);line-height:1.8;padding-left:16px">
+                        <li>"El peso del TV es validado por Logística Automática."</li>
+                        <li>Tiene <strong>Score de Integridad</strong>. Si detecta anomalías (ej. peso incongruente), es
+                            un semáforo rojo. <strong>BLOQUEA</strong> la publicación a la Web.</li>
+                        <li>Posee un <strong>Flujo de Autorización</strong>. Nadie ve el SKU fuera del Hub hasta que I&D
+                            lo marca como 100% íntegro.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════ SLIDE 5: MAPA DE PROCESO ═══════════════════ -->
+        <div class="slide" id="s5">
+            <div class="tag">Visualización de Arquitectura</div>
+            <h2>Mapa de Proceso Seguro</h2>
+
+            <div class="process-container">
+                <!-- ORIGENES -->
+                <div class="process-row">
+                    <div class="process-card source">
+                        <h4 style="color:var(--muted);font-size:11px">SAP B1</h4>
+                        <strong>Empresa Holding</strong>
+                    </div>
+                    <div class="process-card mainsource">
+                        <h4 style="color:var(--daka-red);font-size:11px;font-weight:900">FUENTE PRINCIPAL (95%)</h4>
+                        <strong style="font-size:18px">SBO_TIENDAS_DAKA_PROD</strong>
+                    </div>
+                    <div class="process-card source">
+                        <h4 style="color:var(--muted);font-size:11px">SAP B1</h4>
+                        <strong>Empresas Aux. (30+)</strong>
+                    </div>
+                </div>
+
+                <div class="arrow-down">↓ Lectura Programada (Sin Impacto) ↓</div>
+
+                <!-- HUB EN MEDIO -->
+                <div class="process-center">
+                    <div class="process-card hub">
+                        <h3 style="font-size:20px;margin-bottom:8px">SBD_MDM_MASTER</h3>
+                        <div style="font-size:12px;opacity:0.9;margin-bottom:12px">
+                            Recibe 95% de SAP + Permite capturar 5% manual/marketing
+                        </div>
+                        <div style="background:rgba(255,255,255,0.2);padding:10px;border-radius:8px;font-weight:bold">
+                            SEMÁFORO DE GOBIERNO (Score de Integridad)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="arrow-down">↓ Distribución Únicamente Validada ↓</div>
+
+                <!-- CONSUMIDORES -->
+                <div class="process-row" style="margin-top:10px">
+                    <div class="process-card consumer">
+                        <span style="font-size:20px">🛒</span>
+                        <h4>E-Commerce</h4>
+                        <span style="font-size:11px;color:var(--muted)">0 Caídas / SEO Listo</span>
+                    </div>
+                    <div class="process-card consumer" style="border-top-color:var(--blue)">
+                        <span style="font-size:20px">🌿</span>
+                        <h4>Leafio</h4>
+                        <span style="font-size:11px;color:var(--muted)">Reposición Exacta</span>
+                    </div>
+                    <div class="process-card consumer" style="border-top-color:var(--purple)">
+                        <span style="font-size:20px">🚛</span>
+                        <h4>WMS / TMS</h4>
+                        <span style="font-size:11px;color:var(--muted)">Volumen Validado</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════ SLIDE 6: EL TOQUE DE GRACIA ═══════════════════ -->
+        <div class="slide" id="s6">
+            <div class="tag" style="background:var(--daka-blue);color:white">Conclusión Técnica</div>
+            <h2>"El Toque de Gracia"</h2>
+
+            <div class="card"
+                style="max-width:900px;width:100%;padding:40px;text-align:center;border-left:8px solid var(--daka-red)">
+                <h3 style="font-size:28px;color:var(--daka-blue);margin-bottom:20px;line-height:1.4">
+                    "No venimos a pedirles presupuesto para un proyecto de <i>data entry</i>, porque el 95% ya lo tienen
+                    en SBO_PROD."
+                </h3>
+                <p style="font-size:18px;color:var(--text);font-weight:500;line-height:1.6">
+                    Venimos a proponer un <strong>Semáforo de Seguridad</strong>.<br><br>
+                    SBD_MDM_MASTER es la garantía arquitectónica de que <strong>JAMÁS</strong> ralentizaremos la
+                    facturación de las tiendas por una venta web, y <strong>JAMÁS</strong> bloquearemos un camión
+                    logístico por un error humano en SAP.<br><br>
+                    <span style="color:var(--daka-red);font-weight:900;font-size:20px">Gobernamos afuera, para proteger
+                        adentro.</span>
+                </p>
+            </div>
+            <div style="margin-top:28px;font-size:13px;color:var(--daka-blue);font-weight:bold">Dirección de
+                Investigación y Desarrollo · Tiendas Daka</div>
+        </div>
+
+    </div><!-- end deck -->
+
+    <!-- NAV -->
+    <nav id="navBar"></nav>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const titles = ['Portada', 'El Elefante en TI', 'Escudo Performance', 'El Último 5%', 'Tener vs Gobernar', 'Mapa de Arquitectura', 'El Toque de Gracia'];
+        let cur = 0;
+
+        function goto(n) {
+            slides[cur].classList.remove('active');
+            slides[cur].classList.add('exit');
+            setTimeout(() => slides[cur].classList.remove('exit'), 500);
+            cur = Math.max(0, Math.min(n, slides.length - 1));
+            slides[cur].classList.add('active');
+            update();
+        }
+
+        function update() {
+            document.getElementById('progress').style.width = ((cur / (slides.length - 1)) * 100) + '%';
+            document.getElementById('slideNum').textContent = (cur + 1) + ' / ' + slides.length;
+            document.querySelectorAll('#navBar button').forEach((b, i) => b.classList.toggle('active', i === cur));
+        }
+
+        // Build nav
+        const nav = document.getElementById('navBar');
+
+        // Add Daka brand to nav
+        const brand = document.createElement('div');
+        brand.innerHTML = 'Daka<span style="color: var(--daka-red);">.</span> TI';
+        brand.style.cssText = 'font-weight: 900; font-size: 16px; color: var(--daka-blue); margin-right: 12px; letter-spacing: -0.5px;';
+        nav.appendChild(brand);
+
+        titles.forEach((t, i) => {
+            const b = document.createElement('button');
+            b.textContent = t;
+            b.onclick = () => goto(i);
+            nav.appendChild(b);
+        });
+
+        // Keyboard
+        document.addEventListener('keydown', e => {
+            // Only use Left/Right for slides. Up/Down is for scrolling tall slides like the Roadmap.
+            if (e.key === 'ArrowRight' || e.key === ' ') goto(cur + 1);
+            if (e.key === 'ArrowLeft') goto(cur - 1);
+        });
+
+        // Touch swipe
+        let sx = 0;
+        document.addEventListener('touchstart', e => sx = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+            const dx = e.changedTouches[0].clientX - sx;
+            if (Math.abs(dx) > 50) goto(cur + (dx < 0 ? 1 : -1));
+        });
+
+        update();
+    </script>
+</body>
+
+</html>
