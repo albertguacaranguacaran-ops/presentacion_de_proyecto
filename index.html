@@ -1,0 +1,1383 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gobierno del Dato Maestro – Tiendas Daka</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --daka-yellow: #FFDD00;
+      --daka-blue: #003087;
+      /* Deep corporate blue */
+      --daka-red: #E3000F;
+      /* Daka red */
+      --bg: var(--daka-yellow);
+      --card: #FFFFFF;
+      --text: #003087;
+      --muted: #4B5A7D;
+      --border: rgba(0, 48, 135, 0.15);
+
+      --red: var(--daka-red);
+      --green: #00A650;
+      --blue: #005AEE;
+      --yellow: #D48800;
+      --purple: #8E44AD;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* SLIDES */
+    .deck {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 130px 64px 80px 64px;
+      /* Space for the top nav */
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .5s, transform .5s;
+      transform: translateX(60px);
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    /* Scrollbar check */
+    .slide::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .slide::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 5px;
+    }
+
+    .slide::-webkit-scrollbar-thumb {
+      background: var(--daka-blue);
+      border-radius: 5px;
+      border: 2px solid var(--bg);
+    }
+
+    .slide::-webkit-scrollbar-thumb:hover {
+      background: #002266;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateX(0);
+    }
+
+    .slide.exit {
+      opacity: 0;
+      transform: translateX(-60px);
+    }
+
+    /* NAV - Daka Pill Style (Yellow Theme) */
+    nav {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      z-index: 99;
+      background: var(--daka-yellow);
+      border: 3px solid var(--daka-blue);
+      padding: 10px 24px;
+      border-radius: 50px;
+      box-shadow: 0 8px 25px rgba(255, 221, 0, 0.4);
+      width: max-content;
+      max-width: 95vw;
+    }
+
+    nav button {
+      background: transparent;
+      border: 1px solid rgba(0, 48, 135, 0.2);
+      color: var(--daka-blue);
+      cursor: pointer;
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      padding: 8px 18px;
+      border-radius: 20px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    nav button:hover {
+      background: rgba(0, 48, 135, 0.05);
+      border-color: var(--daka-blue);
+    }
+
+    nav button.active {
+      color: #fff;
+      background: var(--daka-blue);
+      border-color: var(--daka-blue);
+      box-shadow: 0 4px 12px rgba(0, 48, 135, 0.3);
+    }
+
+    .progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 5px;
+      background: var(--daka-yellow);
+      transition: width .4s;
+      z-index: 100;
+      box-shadow: 0 2px 5px rgba(255, 221, 0, 0.3);
+    }
+
+    .slide-num {
+      position: fixed;
+      bottom: 24px;
+      right: 32px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--muted);
+      background: var(--card);
+      padding: 6px 14px;
+      border-radius: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border);
+    }
+
+    /* TYPOGRAPHY */
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--daka-blue);
+      background: var(--daka-yellow);
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 10px rgba(255, 221, 0, 0.2);
+    }
+
+    h1 {
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 900;
+      line-height: 1.1;
+      text-align: center;
+      color: var(--daka-blue);
+      letter-spacing: -1px;
+    }
+
+    h2 {
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 12px;
+      color: var(--daka-blue);
+      letter-spacing: -0.5px;
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--daka-blue);
+    }
+
+    p {
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .highlight {
+      font-weight: 700;
+      color: var(--daka-blue);
+    }
+
+    .red {
+      color: var(--red);
+    }
+
+    .green {
+      color: var(--green);
+    }
+
+    .blue {
+      color: var(--blue);
+    }
+
+    .yellow {
+      color: #D48800;
+    }
+
+    .purple {
+      color: var(--purple);
+    }
+
+    /* GRIDS & CARDS */
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      width: 100%;
+      max-width: 960px;
+    }
+
+    .grid3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    .grid4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+      border-color: rgba(0, 48, 135, 0.2);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      border-radius: 16px 16px 0 0;
+      background: var(--daka-blue);
+    }
+
+    .card.red::before {
+      background: var(--red)
+    }
+
+    .card.green::before {
+      background: var(--green)
+    }
+
+    .card.blue::before {
+      background: var(--blue)
+    }
+
+    .card.yellow::before {
+      background: var(--daka-yellow)
+    }
+
+    .card.purple::before {
+      background: var(--purple)
+    }
+
+    .icon {
+      font-size: 32px;
+      margin-bottom: 16px;
+    }
+
+    /* SLIDE EXTRAS */
+    #s0 {
+      background: radial-gradient(circle at top right, rgba(255, 221, 0, 0.1) 0%, transparent 50%), radial-gradient(circle at bottom left, rgba(0, 48, 135, 0.05) 0%, transparent 50%);
+    }
+
+    .logo-text {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--daka-blue);
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(227, 0, 15, 0.08);
+      border: 1px solid rgba(227, 0, 15, 0.2);
+      border-radius: 24px;
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--daka-red);
+      margin-bottom: 32px;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: var(--muted);
+      margin-top: 20px;
+      max-width: 650px;
+      text-align: center;
+    }
+
+    .flow {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      width: 100%;
+      max-width: 1100px;
+      justify-content: center;
+    }
+
+    .db-box {
+      flex: 1;
+      padding: 24px;
+      text-align: left;
+    }
+
+    .db-label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .db-name {
+      font-size: 16px;
+      font-family: monospace;
+      background: rgba(0, 0, 0, 0.04);
+      padding: 6px 10px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      color: var(--daka-blue);
+      word-break: break-all;
+    }
+
+    .db-fields {
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 15px;
+    }
+
+    .arrow-line {
+      height: 3px;
+      width: 40px;
+      background: var(--border);
+    }
+
+    .arrow-head {
+      width: 0;
+      height: 0;
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+      border-left: 9px solid var(--border);
+    }
+
+    .arrow-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .problems-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      max-width: 850px;
+    }
+
+    .problem-item {
+      display: flex;
+      gap: 20px;
+      padding: 20px 24px;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      align-items: flex-start;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+      transition: transform 0.2s;
+    }
+
+    .problem-item:hover {
+      transform: translateX(5px);
+      border-color: rgba(0, 48, 135, 0.2);
+    }
+
+    .problem-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .pillar {
+      text-align: center;
+      padding: 32px 24px;
+    }
+
+    .pillar .p-num {
+      font-size: 48px;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 12px;
+      color: var(--daka-blue);
+    }
+
+    .pillar .p-title {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: var(--daka-blue);
+    }
+
+    .pillar .p-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .golden {
+      background: #FFFFFF;
+      border: 2px solid var(--daka-yellow);
+      border-radius: 20px;
+      padding: 32px;
+      text-align: center;
+      max-width: 750px;
+      box-shadow: 0 15px 40px rgba(255, 221, 0, 0.15);
+    }
+
+    .golden .field-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 24px;
+      text-align: left;
+    }
+
+    .field-chip {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--daka-blue);
+      font-weight: 600;
+    }
+
+    .field-chip span {
+      display: block;
+      font-size: 10px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      font-weight: 700;
+    }
+
+    .arch-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      width: 100%;
+      max-width: 1000px;
+      margin-top: 20px;
+    }
+
+    .arch-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      flex: 1;
+    }
+
+    .arch-box {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    .arch-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      letter-spacing: 1px;
+    }
+
+    .hub-center {
+      background: var(--daka-blue);
+      color: #fff;
+      padding: 40px;
+      border-radius: 24px;
+      text-align: center;
+      border: 4px solid var(--daka-yellow);
+      box-shadow: 0 20px 40px rgba(0, 48, 135, 0.3);
+      position: relative;
+      z-index: 10;
+    }
+
+    .hub-center h3 {
+      color: #fff;
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      width: 100%;
+      max-width: 850px;
+    }
+
+    .phase {
+      display: flex;
+      gap: 24px;
+    }
+
+    .phase-line {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 6px;
+    }
+
+    .phase-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      z-index: 2;
+      border: 3px solid var(--daka-blue);
+      background: #fff;
+    }
+
+    .phase-vert {
+      width: 2px;
+      flex-grow: 1;
+      background: var(--border);
+      margin: 6px 0;
+    }
+
+    .phase-content {
+      padding-bottom: 30px;
+    }
+
+    .phase-tag {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .phase-tag.red {
+      background: rgba(227, 0, 15, 0.1);
+      color: var(--daka-red);
+    }
+
+    .phase-tag.blue {
+      background: rgba(0, 48, 135, 0.1);
+      color: var(--daka-blue);
+    }
+
+    .phase-tag.green {
+      background: rgba(0, 166, 80, 0.1);
+      color: var(--green);
+    }
+
+    .phase-tag.yellow {
+      background: rgba(255, 221, 0, 0.2);
+      color: #B38600;
+    }
+
+    .phase-tasks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .phase-task {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .metric {
+      text-align: center;
+    }
+
+    .metric .m-val {
+      font-size: 48px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -2px;
+    }
+
+    .metric .m-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+
+    .wide {
+      max-width: 1200px;
+      width: 100%;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="progress" id="progress"></div>
+  <div class="slide-num" id="slideNum"></div>
+
+  <div class="deck" id="deck">
+    <!-- ═══════════════════ SLIDE 0: PORTADA ═══════════════════ -->
+    <div class="slide active" id="s0" style="text-align:center">
+      <div class="tag">Dirección de Investigación y Desarrollo</div>
+      <h1 style="margin-top:20px; font-size: 60px; font-weight: 900; color: var(--daka-blue);">
+        Gobernanza del <br /><span class="red">Dato Maestro</span>
+      </h1>
+      <p style="font-size:20px;max-width:700px;margin-bottom:32px; color: var(--text-light);">
+        Unificación Estratégica de SKUs para SAP B1, Leafio, WMS, TMS y E-Commerce.
+      </p>
+      <div class="card" style="display:inline-block;padding:15px 40px;border-top:5px solid var(--daka-yellow)">
+        <div style="font-weight:800;font-size:14px;color:var(--daka-blue)">REUNIÓN I&D + E-COMMERCE</div>
+        <div style="font-size:13px;color:var(--text-light);margin-top:4px">Febrero 2026 · Tiendas Daka</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ SLIDE 1: ARQUITECTURA ACTUAL ═══════════════════ -->
+    <div class="slide" id="s1">
+      <div class="tag">Diagnóstico · Estado Actual</div>
+      <h2>¿Cómo viaja el dato hoy?</h2>
+      <p style="margin-bottom:32px;max-width:700px;text-align:center">El dato del SKU recorre 3 bases de datos SAP B1 en
+        réplica, pero <span class="red">nunca viaja completo</span>.</p>
+      <div class="flow">
+        <div class="db-box card red">
+          <div class="db-label red">HOLDING</div>
+          <div class="db-name">SBD_HOLDING_COMPRAS</div>
+          <div class="db-fields">
+            ✅ Código SAP (OITM)<br />
+            ✅ Costo de compra<br />
+            ✅ Proveedor<br />
+            ✅ Código de barras<br />
+            ✅ Descripción base<br />
+            ❌ Datos logísticos<br />
+            ❌ Nombre comercial
+          </div>
+        </div>
+        <div class="arrow">
+          <div class="arrow-label">Réplica</div>
+          <div style="display:flex;align-items:center">
+            <div class="arrow-line"></div>
+            <div class="arrow-head"></div>
+          </div>
+          <div class="arrow-label" style="color:var(--red)">⚠ Parcial</div>
+        </div>
+        <div class="db-box card blue">
+          <div class="db-label blue">CDD – LOGÍSTICA</div>
+          <div class="db-name">SBD_CDD_PRODU</div>
+          <div class="db-fields">
+            ✅ Alto/Ancho empaque<br />
+            ✅ Peso real<br />
+            ✅ Verificación cód. barra<br />
+            ✅ Inventario<br />
+            ❌ Nombre comercial<br />
+            ❌ Costo original<br />
+            ❌ Datos e-commerce
+          </div>
+        </div>
+        <div class="arrow">
+          <div class="arrow-label">Réplica</div>
+          <div style="display:flex;align-items:center">
+            <div class="arrow-line"></div>
+            <div class="arrow-head"></div>
+          </div>
+          <div class="arrow-label" style="color:var(--red)">⚠ Parcial</div>
+        </div>
+        <div class="db-box card green">
+          <div class="db-label green">TIENDAS</div>
+          <div class="db-name">SBO_TIENDAS_DAKA_PROD</div>
+          <div class="db-fields">
+            ✅ Nombre comercial<br />
+            ✅ Descripción web<br />
+            ✅ Precio de venta<br />
+            ❌ Dimensiones reales<br />
+            ❌ Datos de costo<br />
+            ❌ Datos GS1/logísticos
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ SLIDE 2: PROBLEMAS ═══════════════════ -->
+    <div class="slide" id="s2">
+      <div class="tag">Diagnóstico · Problemática</div>
+      <h2>Los problemas que frenamos hoy</h2>
+      <div class="problems-list">
+        <div class="problem-item">
+          <div class="problem-icon">🚧</div>
+          <div>
+            <h3>Datos incompletos en cada base de datos</h3>
+            <p>Ninguna DB tiene el SKU completo. Cada área ve sólo su "pedazo" del dato, generando decisiones con
+              información parcial.</p>
+          </div>
+        </div>
+        <div class="problem-item">
+          <div class="problem-icon">♻️</div>
+          <div>
+            <h3>Tablas duplicadas con la misma información</h3>
+            <p>Se han creado tablas redundantes en distintas bases para suplir los campos faltantes, sin gobierno ni
+              estándar.</p>
+          </div>
+        </div>
+        <div class="problem-item">
+          <div class="problem-icon">📦</div>
+          <div>
+            <h3>E-Commerce sin datos logísticos reales</h3>
+            <p>La tienda en línea publica dimensiones y pesos incorrectos porque CDD y Tiendas no comparten estos campos
+              en la réplica.</p>
+          </div>
+        </div>
+        <div class="problem-item">
+          <div class="problem-icon">⚙️</div>
+          <div>
+            <h3>Algoritmos (Leafio / WMS / TMS) mal alimentados</h3>
+            <p>Los sistemas de optimización reciben datos incompletos o inconsistentes, afectando la cadena de
+              suministro completa.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ SLIDE 3: SOLUCIÓN – GOLDEN RECORD ═══════════════════ -->
+    <div class="slide" id="s3">
+      <div class="tag">Solución · Golden Record</div>
+      <h2>Un solo <span class="yellow">registro dorado</span> del SKU</h2>
+      <p style="max-width:660px;text-align:center;margin-bottom:28px">Creamos una <strong>capa de Dato Maestro
+          centralizada</strong> que actúa como única fuente de verdad, enriquecida desde todas las áreas y distribuida
+        completa a todos los sistemas.</p>
+      <div class="golden">
+        <div style="font-size:32px;margin-bottom:8px">🏆</div>
+        <h3 style="color:var(--yellow);font-size:18px">SKU Master Record</h3>
+        <p style="font-size:13px;color:var(--muted)">Todos los dominios del dato en un único registro validado</p>
+        <div class="field-grid">
+          <div class="field-chip"><span>Identidad</span>Código SAP · EAN · Proveedor</div>
+          <div class="field-chip"><span>Compras</span>Costo · MOQ · Lead Time</div>
+          <div class="field-chip"><span>Logística</span>Peso · Alto · Ancho · Largo</div>
+          <div class="field-chip"><span>Inventario</span>Unidad · Factor conversión</div>
+          <div class="field-chip"><span>Comercial</span>Nombre · Marca · Categoría</div>
+          <div class="field-chip"><span>E-Commerce</span>Descripción · Imagen · SEO</div>
+          <div class="field-chip"><span>GS1</span>GTIN · SSCC · GLN</div>
+          <div class="field-chip"><span>Calidad</span>Score integridad · Validaciones</div>
+          <div class="field-chip"><span>Trazabilidad</span>Creado · Modificado · Aprobado</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ SLIDE 4: ARQUITECTURA PROPUESTA ═══════════════════ -->
+    <div class="slide" id="s4">
+      <div class="tag">Solución · Arquitectura</div>
+      <h2>Nueva arquitectura de distribución</h2>
+      <div class="wide" style="max-width:1050px">
+        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:center">
+          <!-- Fuentes -->
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div class="card red" style="padding:14px">
+              <div style="font-size:10px;color:var(--red);font-weight:700;letter-spacing:1px;margin-bottom:4px">FUENTE 1
+              </div>
+              <div style="font-size:13px;font-weight:600">Holding · Compras</div>
+              <div style="font-size:10px;color:var(--muted)">Identidad, Costos, Códigos</div>
+            </div>
+            <div class="card blue" style="padding:14px">
+              <div style="font-size:10px;color:var(--blue);font-weight:700;letter-spacing:1px;margin-bottom:4px">FUENTE
+                2</div>
+              <div style="font-size:13px;font-weight:600">CDD · Logística</div>
+              <div style="font-size:10px;color:var(--muted)">Dimensiones, Pesos, Barcode</div>
+            </div>
+            <div class="card green" style="padding:14px">
+              <div style="font-size:10px;color:var(--green);font-weight:700;letter-spacing:1px;margin-bottom:4px">FUENTE
+                3</div>
+              <div style="font-size:13px;font-weight:600">Tiendas · Comercial</div>
+              <div style="font-size:10px;color:var(--muted)">Nombre, Descripción, Precio</div>
+            </div>
+          </div>
+          <!-- Centro MDM -->
+          <div style="display:flex;flex-direction:column;align-items:center;padding:0 24px">
+            <div style="font-size:10px;color:var(--muted);margin-bottom:6px">↔ SYNC</div>
+            <div class="card yellow" style="padding:20px 16px;text-align:center;border-color:rgba(245,166,35,.4)">
+              <div style="font-size:24px;margin-bottom:6px">🏆</div>
+              <div style="font-size:11px;font-weight:700;color:var(--yellow);letter-spacing:1px">MDM HUB</div>
+              <div style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.5">Golden
+                Record<br />Validación<br />Score Calidad</div>
+            </div>
+            <div style="font-size:10px;color:var(--muted);margin-top:6px">↓ DIST</div>
+          </div>
+          <!-- Consumidores -->
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div class="card purple" style="padding:14px">
+              <div style="font-size:10px;color:var(--purple);font-weight:700;letter-spacing:1px;margin-bottom:4px">
+                DESTINO 1</div>
+              <div style="font-size:13px;font-weight:600">E-Commerce</div>
+              <div style="font-size:10px;color:var(--muted)">SKU completo + imágenes + SEO</div>
+            </div>
+            <div class="card" style="padding:14px;border-color:rgba(0,200,150,.25)">
+              <div style="font-size:10px;color:var(--green);font-weight:700;letter-spacing:1px;margin-bottom:4px">
+                DESTINO 2</div>
+              <div style="font-size:13px;font-weight:600">Leafio / WMS / TMS</div>
+              <div style="font-size:10px;color:var(--muted)">Datos logísticos exactos</div>
+            </div>
+            <div class="card" style="padding:14px;border-color:rgba(30,144,255,.25)">
+              <div style="font-size:10px;color:var(--blue);font-weight:700;letter-spacing:1px;margin-bottom:4px">DESTINO
+                3</div>
+              <div style="font-size:13px;font-weight:600">SAP B1 todas las BDs</div>
+              <div style="font-size:10px;color:var(--muted)">Réplica enriquecida completa</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ SLIDE 5: PILARES DEL GOBIERNO ═══════════════════ -->
+    <div class="slide" id="s5">
+      <div class="tag">Solución · Gobierno del Dato</div>
+      <h2>4 Pilares del Gobierno del Dato Maestro</h2>
+      <div class="grid4" style="margin-top:16px">
+        <div class="card red pillar">
+          <div class="p-num red">01</div>
+          <div class="p-title">Estándares GS1</div>
+          <div class="p-desc">Normas universales de codificación GTIN, SSCC y GLN. Relación técnica con entes
+            reguladores.</div>
+        </div>
+        <div class="card blue pillar">
+          <div class="p-num blue">02</div>
+          <div class="p-title">Flujo de Aprobación</div>
+          <div class="p-desc">Ningún SKU se activa sin aprobación de I&D. Criterio: viabilidad logística y técnica.
+          </div>
+        </div>
+        <div class="card green pillar">
+          <div class="p-num green">03</div>
+          <div class="p-title">Score de Integridad</div>
+          <div class="p-desc">Cada SKU recibe un puntaje de completitud. SKUs incompletos no replican a sistemas
+            downstream.</div>
+        </div>
+        <div class="card yellow pillar">
+          <div class="p-num yellow">04</div>
+          <div class="p-title">Mejora Continua</div>
+          <div class="p-desc">Dashboards de calidad del dato, alertas automáticas y revisión periódica de políticas.
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:24px;padding:16px 24px;max-width:900px;width:100%">
+        <p style="font-size:13px;color:var(--muted)">
+          <strong style="color:#fff">Regla de oro:</strong> El <span class="yellow">Score Mínimo de Integridad</span>
+          determina si un SKU puede ser publicado en E-Commerce, procesado por Leafio, y operado en WMS/TMS.
+          Un SKU sin dimensiones logísticas = <span class="red">bloqueado</span> para distribución.
+        </p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ SLIDE 6: ROADMAP ═══════════════════ -->
+    <div class="slide" id="s6">
+      <div class="tag">Plan de Ejecución</div>
+      <h2>Hoja de Ruta · 12 Semanas</h2>
+      <div class="timeline" style="margin-top:20px">
+        <div class="phase">
+          <div class="phase-line">
+            <div class="phase-dot" style="background:var(--red)"></div>
+            <div class="phase-vert"></div>
+          </div>
+          <div class="phase-content">
+            <div class="phase-tag red">FASE 1 · Sem 1–3 · DIAGNÓSTICO</div>
+            <h3>Inventario y Mapeo del Dato</h3>
+            <p style="font-size:12px">Auditoría completa de campos en las 3 bases de datos. Identificar tablas
+              duplicadas. Mapear gaps de replicación.</p>
+            <div class="phase-tasks">
+              <span class="phase-task">Auditoría OITM</span>
+              <span class="phase-task">Mapa de campos por DB</span>
+              <span class="phase-task">Inventario duplicados</span>
+              <span class="phase-task">Entrevistas a áreas</span>
+            </div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-line">
+            <div class="phase-dot" style="background:var(--blue)"></div>
+            <div class="phase-vert"></div>
+          </div>
+          <div class="phase-content">
+            <div class="phase-tag blue">FASE 2 · Sem 4–7 · DISEÑO &amp; BUILD</div>
+            <h3>Construcción del MDM Hub</h3>
+            <p style="font-size:12px">Diseño del modelo Golden Record. Definición de políticas, flujos de aprobación y
+              score de integridad. Desarrollo del hub central.</p>
+            <div class="phase-tasks">
+              <span class="phase-task">Modelo de datos</span>
+              <span class="phase-task">Score de integridad</span>
+              <span class="phase-task">Flujo de aprobación</span>
+              <span class="phase-task">ETL / Conectores SAP B1</span>
+            </div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-line">
+            <div class="phase-dot" style="background:var(--green)"></div>
+            <div class="phase-vert"></div>
+          </div>
+          <div class="phase-content">
+            <div class="phase-tag green">FASE 3 · Sem 8–10 · INTEGRACIÓN</div>
+            <h3>Conexión con sistemas downstream</h3>
+            <p style="font-size:12px">Integrar E-Commerce, Leafio, WMS y TMS con el hub como única fuente. Réplica
+              enriquecida completa a SAP B1.</p>
+            <div class="phase-tasks">
+              <span class="phase-task">API E-Commerce</span>
+              <span class="phase-task">Leafio feed</span>
+              <span class="phase-task">WMS / TMS sync</span>
+              <span class="phase-task">Réplica SAP bidireccional</span>
+            </div>
+          </div>
+        </div>
+        <div class="phase">
+          <div class="phase-line">
+            <div class="phase-dot" style="background:var(--yellow)"></div>
+          </div>
+          <div class="phase-content">
+            <div class="phase-tag yellow">FASE 4 · Sem 11–12 · ESTABILIZACIÓN</div>
+            <h3>Go-Live y Gobierno Operacional</h3>
+            <p style="font-size:12px">Dashboard de calidad del dato. Capacitación a equipos. Políticas formales
+              publicadas. Monitoreo continuo.</p>
+            <div class="phase-tasks">
+              <span class="phase-task">Dashboard calidad</span>
+              <span class="phase-task">Capacitación</span>
+              <span class="phase-task">Política oficial</span>
+              <span class="phase-task">Monitoreo KPI</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ SLIDE 7: CIERRE ═══════════════════ -->
+    <div class="slide" id="s7">
+      <div class="tag">Resultado esperado</div>
+      <h2>Lo que <span class="green">logramos</span> con esta solución</h2>
+      <div class="grid3" style="margin-top:20px;margin-bottom:24px">
+        <div class="card green metric" style="padding:28px">
+          <div class="m-val green">100%</div>
+          <div class="m-label">de SKUs con dato completo<br />antes de publicar en e-commerce</div>
+        </div>
+        <div class="card blue metric" style="padding:28px">
+          <div class="m-val blue">1</div>
+          <div class="m-label">única fuente de verdad<br />para todos los sistemas</div>
+        </div>
+        <div class="card red metric" style="padding:28px">
+          <div class="m-val red">0</div>
+          <div class="m-label">tablas duplicadas<br />sin gobierno de dato</div>
+        </div>
+      </div>
+      <div class="card" style="max-width:820px;width:100%;padding:20px 28px;border-color:rgba(0,200,150,.25)">
+        <p style="font-size:14px;line-height:1.8">
+          <strong class="green">Mi compromiso como responsable de I&D:</strong><br />
+          Garantizar que cada SKU que entra al ecosistema Daka cumpla con los estándares de integridad necesarios para
+          operar correctamente en SAP, Leafio, WMS, TMS y E-Commerce — con <strong>trazabilidad total</strong> desde la
+          creación hasta la venta.
+        </p>
+      </div>
+      <div style="margin-top:28px;font-size:13px;color:var(--muted)">Dirección de Investigación y Desarrollo · Tiendas
+        Daka · 2026</div>
+    </div>
+
+    <!-- ═══════════════════ SLIDE 8: DÓNDE IMPLEMENTAR EL MDM HUB ═══════════════════ -->
+    <div class="slide" id="s8">
+      <div class="tag">Propuesta Técnica · Implementación</div>
+      <h2>¿Dónde crear el <span class="yellow">MDM Hub</span>?</h2>
+      <p style="max-width:700px;text-align:center;margin-bottom:24px">Vive en la misma infraestructura SQL Server de SAP
+        B1 — como una base de datos de gobierno <strong>independiente</strong>, sin romper ni tocar las BDs fuente.</p>
+      <div class="grid3" style="max-width:1060px;margin-bottom:18px">
+        <div class="card yellow" style="padding:22px">
+          <div class="icon">🗄️</div>
+          <h3 class="yellow">SBD_MDM_MASTER</h3>
+          <p style="font-size:12px;margin-top:6px">Nueva BD en el mismo SQL Server. Contiene el <strong>Golden
+              Record</strong> de cada SKU con todos los campos de las 3 BDs unificados y validados.</p>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:5px">
+            <div
+              style="font-size:11px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.25);border-radius:6px;padding:5px 10px">
+              📋 Tabla: <strong>MDM_SKU_MASTER</strong> (Golden Record)</div>
+            <div
+              style="font-size:11px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.25);border-radius:6px;padding:5px 10px">
+              📋 Tabla: <strong>MDM_SKU_SCORE</strong> (Score Integridad)</div>
+            <div
+              style="font-size:11px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.25);border-radius:6px;padding:5px 10px">
+              📋 Tabla: <strong>MDM_AUDIT_LOG</strong> (Trazabilidad)</div>
+            <div
+              style="font-size:11px;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.25);border-radius:6px;padding:5px 10px">
+              📋 Tabla: <strong>MDM_APPROVAL_FLOW</strong> (Aprobaciones)</div>
+          </div>
+        </div>
+        <div class="card blue" style="padding:22px">
+          <div class="icon">⚙️</div>
+          <h3 class="blue">Capa ETL / Sync</h3>
+          <p style="font-size:12px;margin-top:6px">Proceso de integración que extrae, transforma y carga los campos de
+            cada BD hacia el Hub y redistribuye el Golden Record enriquecido.</p>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:5px">
+            <div
+              style="font-size:11px;background:rgba(30,144,255,.1);border:1px solid rgba(30,144,255,.25);border-radius:6px;padding:5px 10px">
+              🔄 <strong>SQL Server Integration Services (SSIS)</strong></div>
+            <div
+              style="font-size:11px;background:rgba(30,144,255,.1);border:1px solid rgba(30,144,255,.25);border-radius:6px;padding:5px 10px">
+              🔄 <strong>SQL Agent Jobs</strong> (sincronización programada)</div>
+            <div
+              style="font-size:11px;background:rgba(30,144,255,.1);border:1px solid rgba(30,144,255,.25);border-radius:6px;padding:5px 10px">
+              🔄 <strong>Stored Procedures + Triggers</strong> de validación</div>
+            <div
+              style="font-size:11px;background:rgba(30,144,255,.1);border:1px solid rgba(30,144,255,.25);border-radius:6px;padding:5px 10px">
+              🔄 <strong>Python / API REST</strong> para distribución externa</div>
+          </div>
+        </div>
+        <div class="card green" style="padding:22px">
+          <div class="icon">👥</div>
+          <h3 class="green">¿Quién trabaja dónde?</h3>
+          <p style="font-size:12px;margin-top:6px">Cada área mantiene su acceso actual en SAP B1. Solo <strong>I&amp;D
+              actúa como custodio</strong> del MDM Hub y aprueba cambios al Golden Record.</p>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:5px">
+            <div
+              style="font-size:11px;background:rgba(0,200,150,.08);border:1px solid rgba(0,200,150,.2);border-radius:6px;padding:5px 10px">
+              🏢 <strong>Compras / Holding</strong> → SAP B1 HOLDING (sin cambios)</div>
+            <div
+              style="font-size:11px;background:rgba(0,200,150,.08);border:1px solid rgba(0,200,150,.2);border-radius:6px;padding:5px 10px">
+              📦 <strong>Logística / CDD</strong> → SAP B1 CDD (sin cambios)</div>
+            <div
+              style="font-size:11px;background:rgba(0,200,150,.08);border:1px solid rgba(0,200,150,.2);border-radius:6px;padding:5px 10px">
+              🛒 <strong>E-Commerce</strong> → consume Golden Record vía API</div>
+            <div
+              style="font-size:11px;background:rgba(0,200,150,.08);border:1px solid rgba(0,200,150,.2);border-radius:6px;padding:5px 10px">
+              🔬 <strong>I&amp;D (tú)</strong> → administra y gobierna SBD_MDM_MASTER</div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="max-width:980px;width:100%;padding:13px 22px;border-color:rgba(245,166,35,.2)">
+        <p style="font-size:12px;color:var(--muted)"><strong class="yellow">🔑 Principio clave:</strong> Las BDs de SAP
+          B1 existentes <strong style="color:#fff">no se modifican ni se tocan</strong>. El MDM Hub lee de ellas via
+          linked servers o vistas, consolida el Golden Record y lo publica. <span class="green">Cero disrupciones
+            operacionales.</span></p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ SLIDE 9: BENEFICIOS LEAFIO / WMS / TMS ═══════════════════ -->
+    <div class="slide" id="s9">
+      <div class="tag">Impacto · Sistemas de Cadena de Suministro</div>
+      <h2>Impacto en <span class="green">Leafio</span>, <span class="blue">WMS</span>, <span class="purple">TMS</span> y
+        <span class="red">E-Commerce</span>
+      </h2>
+      <p style="max-width:700px;text-align:center;margin-bottom:20px">Con el dato maestro completo, cada sistema opera
+        con <strong>precisión real</strong> — no con estimaciones o datos inventados.</p>
+      <div class="grid4" style="max-width:1200px;margin-bottom:14px">
+        <div class="card green" style="padding:18px">
+          <div style="font-size:26px;margin-bottom:8px">🌿</div>
+          <h3 class="green" style="font-size:14px;margin-bottom:8px">Leafio · Planificación</h3>
+          <p style="font-size:11px;color:var(--muted);margin-bottom:10px">Algoritmos de reposición y forecasting
+            alimentados con datos correctos del SKU.</p>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:11px;color:#ccc">✅ Forecasting con SKUs reales</div>
+            <div style="font-size:11px;color:#ccc">✅ Reposición automática exacta</div>
+            <div style="font-size:11px;color:#ccc">✅ Sin SKUs "fantasma"</div>
+            <div style="font-size:11px;color:#ccc">✅ Clasificación ABC correcta</div>
+            <div style="font-size:11px;color:#ccc">✅ Lead time y MOQ exactos</div>
+          </div>
+        </div>
+        <div class="card blue" style="padding:18px">
+          <div style="font-size:26px;margin-bottom:8px">🏭</div>
+          <h3 class="blue" style="font-size:14px;margin-bottom:8px">WMS · Almacén</h3>
+          <p style="font-size:11px;color:var(--muted);margin-bottom:10px">Gestión de ubicaciones y picking con
+            dimensiones físicas reales del empaque.</p>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:11px;color:#ccc">✅ Slotting óptimo por dimensión</div>
+            <div style="font-size:11px;color:#ccc">✅ Peso real = balanza coincide</div>
+            <div style="font-size:11px;color:#ccc">✅ Posición de almacén correcta</div>
+            <div style="font-size:11px;color:#ccc">✅ Cross-docking sin errores</div>
+            <div style="font-size:11px;color:#ccc">✅ Verificación barcode GS1</div>
+          </div>
+        </div>
+        <div class="card purple" style="padding:18px">
+          <div style="font-size:26px;margin-bottom:8px">🚛</div>
+          <h3 class="purple" style="font-size:14px;margin-bottom:8px">TMS · Transporte</h3>
+          <p style="font-size:11px;color:var(--muted);margin-bottom:10px">Optimización de rutas y cargas con volumen y
+            peso real de cada SKU.</p>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:11px;color:#ccc">✅ Cubicaje real de camiones</div>
+            <div style="font-size:11px;color:#ccc">✅ Rutas optimizadas por carga</div>
+            <div style="font-size:11px;color:#ccc">✅ Menos fletes desperdiciados</div>
+            <div style="font-size:11px;color:#ccc">✅ Declaración aduanera exacta</div>
+            <div style="font-size:11px;color:#ccc">✅ Trazabilidad SSCC completa</div>
+          </div>
+        </div>
+        <div class="card red" style="padding:18px">
+          <div style="font-size:26px;margin-bottom:8px">🛒</div>
+          <h3 class="red" style="font-size:14px;margin-bottom:8px">E-Commerce</h3>
+          <p style="font-size:11px;color:var(--muted);margin-bottom:10px">La tienda en línea publica datos reales del
+            producto, no campos vacíos o erróneos.</p>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:11px;color:#ccc">✅ Dimensiones correctas publicadas</div>
+            <div style="font-size:11px;color:#ccc">✅ Nombre comercial estándar</div>
+            <div style="font-size:11px;color:#ccc">✅ Buscador y SEO enriquecidos</div>
+            <div style="font-size:11px;color:#ccc">✅ Costo de envío real calculado</div>
+            <div style="font-size:11px;color:#ccc">✅ Cero devoluciones por dato falso</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:1100px;width:100%">
+        <div
+          style="background:rgba(0,200,150,.07);border:1px solid rgba(0,200,150,.25);border-radius:10px;padding:10px 14px;text-align:center">
+          <div style="font-size:22px;font-weight:800;color:var(--green)">-30%</div>
+          <div style="font-size:10px;color:var(--muted)">Reducción flete por cubicaje real (TMS)</div>
+        </div>
+        <div
+          style="background:rgba(30,144,255,.07);border:1px solid rgba(30,144,255,.25);border-radius:10px;padding:10px 14px;text-align:center">
+          <div style="font-size:22px;font-weight:800;color:var(--blue)">+40%</div>
+          <div style="font-size:10px;color:var(--muted)">Eficiencia de picking con slotting correcto (WMS)</div>
+        </div>
+        <div
+          style="background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.25);border-radius:10px;padding:10px 14px;text-align:center">
+          <div style="font-size:22px;font-weight:800;color:var(--purple)">≈0</div>
+          <div style="font-size:10px;color:var(--muted)">Errores de SKU mal dimensionado en Leafio</div>
+        </div>
+        <div
+          style="background:rgba(200,16,46,.07);border:1px solid rgba(200,16,46,.25);border-radius:10px;padding:10px 14px;text-align:center">
+          <div style="font-size:22px;font-weight:800;color:var(--red)">↑CVR</div>
+          <div style="font-size:10px;color:var(--muted)">Conversión e-commerce por dato completo y confiable</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ SLIDE 11: E-COMMERCE JURISPRUDENCIA Y ENRIQUECIMIENTO ═══════════════════ -->
+    <div class="slide" id="s11">
+      <div class="tag">E-Commerce · Desafíos de Data</div>
+      <h2>E-Commerce: Jurisprudencia y Enriquecimiento</h2>
+      <p style="max-width:750px;text-align:center;margin-bottom:24px">Hoy el e-commerce consume datos directos de la
+        base
+        de datos, pero carece de la <strong>capa deriquecimiento</strong> necesaria para una experiencia de usuario
+        premium.</p>
+      <div class="grid2" style="max-width:1000px;margin-bottom:24px">
+        <div class="card red" style="padding:22px">
+          <div class="icon">⚠️</div>
+          <h3 class="red">El Vacío del "Empaque"</h3>
+          <p style="font-size:13px;margin-top:8px">Faltan descripciones técnicas y comerciales diferenciadas por nivel
+            de empaque:</p>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+            <div
+              style="font-size:12px;background:rgba(200,16,46,.1);border:1px solid rgba(200,16,46,.2);border-radius:8px;padding:8px 12px">
+              📦 <strong>Empaque 1 (Unidad):</strong> Descripciones comerciales, fotos de detalle, beneficios de uso.
+            </div>
+            <div
+              style="font-size:12px;background:rgba(200,16,46,.1);border:1px solid rgba(200,16,46,.2);border-radius:8px;padding:8px 12px">
+              📦 <strong>Empaque 2 (Caja/Inner):</strong> Dimensiones logísticas, peso bruto, unidades por caja, EAN-14.
+            </div>
+          </div>
+        </div>
+        <div class="card blue" style="padding:22px">
+          <div class="icon">🔍</div>
+          <h3 class="blue">Riesgo de Jurisprudencia Directa</h3>
+          <p style="font-size:13px;margin-top:8px">Conectar el e-commerce directamente a la DB transaccional sin un MDM
+            expone:</p>
+          <ul
+            style="font-size:12px;margin-top:10px;margin-left:20px;color:#ccc;display:flex;flex-direction:column;gap:6px">
+            <li>Inconsistencias si se mofica un campo en el ERP.</li>
+            <li>Nombres técnicos de SAP que no son aptos para el cliente final.</li>
+            <li>Falta de validación previa (Score de Integridad).</li>
+            <li>Dificultad para enriquecer campos SEO/Marketing que no existen en SAP.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card yellow" style="max-width:1000px;width:100%;padding:16px 24px">
+        <p style="font-size:13px;color:var(--muted);text-align:center">
+          <strong class="yellow">Solución:</strong> El MDM Hub permitirá que el área comercial enriquezca estas
+          descripciones de empaque <strong>una sola vez</strong> y se distribuyan validadas a la web.
+        </p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ SLIDE 12: PREGUNTAS PARA TI - PARTE 1 ═══════════════════ -->
+    <div class="slide" id="s12">
+      <div class="tag">Coordinación Técnica · TI</div>
+      <h2>Preguntas para TI · Parte 1: <span class="blue">Arquitectura</span></h2>
+      <p style="margin-bottom:28px">Validación técnica de la integración y los flujos de datos.</p>
+      <div class="problems-list" style="max-width:900px">
+        <div class="problem-item" style="background:rgba(30,144,255,.05);border-color:rgba(30,144,255,.2)">
+          <div class="problem-icon blue">01</div>
+          <div>
+            <h3 class="blue">Mecanismo de Réplica</h3>
+            <p style="font-size:13px">¿Cómo está configurada actualmente la réplica entre HOLDING, CDD y TIENDAS? ¿Es
+              vía SQL Agent, transaccional o por jobs personalizados?</p>
+          </div>
+        </div>
+        <div class="problem-item" style="background:rgba(30,144,255,.05);border-color:rgba(30,144,255,.2)">
+          <div class="problem-icon blue">02</div>
+          <div>
+            <h3 class="blue">Vías de Integración Downstream</h3>
+            <p style="font-size:13px">¿Qué mecanismos prefieren para que Leafio y el E-Commerce consuman el MDM Hub?
+              ¿Vistas SQL, API REST centralizada o tablas de staging?</p>
+          </div>
+        </div>
+        <div class="problem-item" style="background:rgba(30,144,255,.05);border-color:rgba(30,144,255,.2)">
+          <div class="problem-icon blue">03</div>
+          <div>
+            <h3 class="blue">Campos Personalizados (UDFs)</h3>
+            <p style="font-size:13px">¿Cuántos UDFs tenemos creados hoy en OITM para suplir la falta de datos? ¿Están
+              estandarizados en todas las bases de datos?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ SLIDE 13: PREGUNTAS PARA TI - PARTE 2 ═══════════════════ -->
+    <div class="slide" id="s13">
+      <div class="tag">Coordinación Técnica · TI</div>
+      <h2>Preguntas para TI · Parte 2: <span class="green">Gobernanza</span></h2>
+      <p style="margin-bottom:28px">Definición de responsabilidades y monitoreo de calidad.</p>
+      <div class="problems-list" style="max-width:900px">
+        <div class="problem-item" style="background:rgba(0,200,150,.05);border-color:rgba(0,200,150,.2)">
+          <div class="problem-icon green">04</div>
+          <div>
+            <h3 class="green">Data Stewardship</h3>
+            <p style="font-size:13px">¿Quiénes son hoy los perfiles responsables de la creación del SKU en cada DB? ¿Hay
+              un protocolo de validación técnica antes de la réplica?</p>
+          </div>
+        </div>
+        <div class="problem-item" style="background:rgba(0,200,150,.05);border-color:rgba(0,200,150,.2)">
+          <div class="problem-icon green">05</div>
+          <div>
+            <h3 class="green">Escalabilidad de Infraestructura</h3>
+            <p style="font-size:13px">¿Contamos con recursos en el servidor SQL actual para alojar la BD
+              `SBD_MDM_MASTER` o recomiendan un entorno dedicado para gobierno de datos?</p>
+          </div>
+        </div>
+        <div class="problem-item" style="background:rgba(0,200,150,.05);border-color:rgba(0,200,150,.2)">
+          <div class="problem-icon green">06</div>
+          <div>
+            <h3 class="green">Logística vs TI</h3>
+            <p style="font-size:13px">¿Cómo podemos automatizar la captura del peso y volumen real en el CDD para que
+              actualice el Golden Record sin intervención manual?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end deck -->
+
+  <!-- NAV -->
+  <nav id="navBar"></nav>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const titles = ['Portada', 'Estado Actual', 'Problemática', 'Golden Record', 'Arquitectura', 'Gobierno', 'Roadmap', 'Resultados', 'Implementación', 'Beneficios', 'E-Commerce', 'TI: Arquitectura', 'TI: Gobernanza'];
+    let cur = 0;
+
+    function goto(n) {
+      slides[cur].classList.remove('active');
+      slides[cur].classList.add('exit');
+      setTimeout(() => slides[cur].classList.remove('exit'), 500);
+      cur = Math.max(0, Math.min(n, slides.length - 1));
+      slides[cur].classList.add('active');
+      update();
+    }
+
+    function update() {
+      document.getElementById('progress').style.width = ((cur / (slides.length - 1)) * 100) + '%';
+      document.getElementById('slideNum').textContent = (cur + 1) + ' / ' + slides.length;
+      document.querySelectorAll('#navBar button').forEach((b, i) => b.classList.toggle('active', i === cur));
+    }
+
+    // Build nav
+    const nav = document.getElementById('navBar');
+
+    // Add Daka brand to nav
+    const brand = document.createElement('div');
+    brand.innerHTML = 'Daka<span style="color: var(--daka-red);">.</span>';
+    brand.style.cssText = 'font-weight: 900; font-size: 16px; color: var(--daka-blue); margin-right: 12px; letter-spacing: -0.5px;';
+    nav.appendChild(brand);
+
+    titles.forEach((t, i) => {
+      const b = document.createElement('button');
+      b.textContent = t;
+      b.onclick = () => goto(i);
+      nav.appendChild(b);
+    });
+
+    // Keyboard
+    document.addEventListener('keydown', e => {
+      // Only use Left/Right for slides. Up/Down is for scrolling tall slides like the Roadmap.
+      if (e.key === 'ArrowRight' || e.key === ' ') goto(cur + 1);
+      if (e.key === 'ArrowLeft') goto(cur - 1);
+    });
+
+    // Touch swipe
+    let sx = 0;
+    document.addEventListener('touchstart', e => sx = e.touches[0].clientX);
+    document.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - sx;
+      if (Math.abs(dx) > 50) goto(cur + (dx < 0 ? 1 : -1));
+    });
+
+    update();
+  </script>
+</body>
+
+</html>
