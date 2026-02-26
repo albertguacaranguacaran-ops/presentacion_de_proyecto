@@ -1335,7 +1335,81 @@
       </div>
     </div>
 
-    <!-- ═══════════════════ SLIDE 12: PREGUNTAS PARA TI - PARTE 1 ═══════════════════ -->
+    <!-- ═══════════════════ SLIDE 12: ANÁLISIS DOFA (NUEVO) ═══════════════════ -->
+    <div class="slide" id="s12">
+      <div class="tag">Resumen Estratégico</div>
+      <h2>Análisis <span class="blue">DOFA</span> del Proyecto MDM</h2>
+      <p style="max-width:850px;text-align:center;margin-bottom:30px">
+        Resumen ejecutivo de la viabilidad y el impacto estratégico de implementar el Master Data Hub en Tiendas Daka.
+      </p>
+
+      <div class="grid2" style="max-width:1050px; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <!-- Debilidades -->
+        <div class="card" style="padding:20px; border-left: 5px solid var(--daka-red);">
+          <h3
+            style="color:var(--daka-red); font-size:16px; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+            <span style="font-size:24px;">📉</span> Debilidades (Internas Actuales)
+          </h3>
+          <ul style="font-size:13px; color:var(--text); line-height:1.5; padding-left:20px; margin:0;">
+            <li style="margin-bottom:8px;"><strong>Datos Fracturados:</strong> 3 bases de datos SAP B1 (Holding, CDD,
+              Tiendas) con información aislada y réplicas rotas.</li>
+            <li style="margin-bottom:8px;"><strong>Carencia E-Commerce/WMS:</strong> SAP OITM nativo no maneja
+              dimensiones multinivel (empaques) ni atributos ricos web (SEO).</li>
+            <li><strong>Mala Praxis:</strong> Reutilización de códigos viejos (Ej. LB-0001) para productos nuevos,
+              rompiendo la trazabilidad.</li>
+          </ul>
+        </div>
+
+        <!-- Oportunidades -->
+        <div class="card" style="padding:20px; border-left: 5px solid var(--green);">
+          <h3
+            style="color:var(--green); font-size:16px; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+            <span style="font-size:24px;">🚀</span> Oportunidades (Externas)
+          </h3>
+          <ul style="font-size:13px; color:var(--text); line-height:1.5; padding-left:20px; margin:0;">
+            <li style="margin-bottom:8px;"><strong>Omnicanalidad Real:</strong> Un catálogo único sincronizado entre
+              E-Commerce, tiendas físicas y RRSS.</li>
+            <li style="margin-bottom:8px;"><strong>Optimización Logística:</strong> Enviar dimensiones y pesos exactos a
+              WMS y TMS ahorra fletes (-30%) y almacén (+40%).</li>
+            <li><strong>Inteligencia Artificial:</strong> Alimentar a Leafio con metadatos de empaques reales mejora
+              radicalmente el forecasting.</li>
+          </ul>
+        </div>
+
+        <!-- Fortalezas -->
+        <div class="card" style="padding:20px; border-left: 5px solid var(--daka-blue);">
+          <h3
+            style="color:var(--daka-blue); font-size:16px; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+            <span style="font-size:24px;">🏛️</span> Fortalezas (La Propuesta MDM)
+          </h3>
+          <ul style="font-size:13px; color:var(--text); line-height:1.5; padding-left:20px; margin:0;">
+            <li style="margin-bottom:8px;"><strong>No Intrusivo para TI:</strong> El MDM Hub <em>lee</em> de SAP, pero
+              no modifica sus OITM, protegiendo las BD transaccionales.</li>
+            <li style="margin-bottom:8px;"><strong>Gobernanza y Cuarentena:</strong> El <em>Golden Record</em> bloquea
+              la bajada a la web de datos que no estén validados al 100%.</li>
+            <li><strong>Uso Eficiente de Recursos:</strong> Absorbe el 95% de la data ya existente en SBO_PROD y solo
+              complementa el 5% logístico/comercial.</li>
+          </ul>
+        </div>
+
+        <!-- Amenazas -->
+        <div class="card" style="padding:20px; border-left: 5px solid #FF9800;">
+          <h3 style="color:#FF9800; font-size:16px; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+            <span style="font-size:24px;">⚠️</span> Amenazas (Riesgos de No Actuar)
+          </h3>
+          <ul style="font-size:13px; color:var(--text); line-height:1.5; padding-left:20px; margin:0;">
+            <li style="margin-bottom:8px;"><strong>Crisis De Marca:</strong> Publicidad engañosa y quejas públicas por
+              despachar productos diferentes a la foto web (mezcla de SKUs).</li>
+            <li style="margin-bottom:8px;"><strong>Caídas ERP:</strong> Conectar E-Commerce masivo directo a la BD
+              productiva SAP puede ralentizar las cajas/ventas en tiendas físicas.</li>
+            <li><strong>Retraso Tecnológico:</strong> WMS, Leafio y E-Commerce trabajarán mal o limitados si la
+              "gasolina" (el dato maestro) está contaminada.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ SLIDE 13: PREGUNTAS PARA TI - PARTE 1 ═══════════════════ -->
     <div class="slide" id="s12">
       <div class="tag">Coordinación Técnica · TI</div>
       <h2>Preguntas para TI · Parte 1: <span class="blue">Arquitectura</span></h2>
@@ -1408,7 +1482,7 @@
 
   <script>
     const slides = document.querySelectorAll('.slide');
-    const titles = ['Portada', 'Estado Actual', 'Problemática', 'Golden Record', 'Arquitectura', 'Gobierno', 'Roadmap', 'Resultados', 'Implementación', 'Riesgo Reuso SKU', 'Beneficios', 'E-Commerce', 'TI: Arquitectura', 'TI: Gobernanza'];
+    const titles = ['Portada', 'Estado Actual', 'Problemática', 'Golden Record', 'Arquitectura', 'Gobierno', 'Roadmap', 'Resultados', 'Implementación', 'Riesgo Reuso SKU', 'Beneficios', 'E-Commerce', 'DOFA', 'TI: Arquitectura', 'TI: Gobernanza'];
     let cur = 0;
 
     function goto(n) {
