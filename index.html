@@ -1121,7 +1121,105 @@
       </div>
     </div>
 
-    <!-- ═══════════════════ SLIDE 9: BENEFICIOS LEAFIO / WMS / TMS ═══════════════════ -->
+    <!-- ═══════════════════ SLIDE 9: REUTILIZACIÓN DE SKUS (NUEVO) ═══════════════════ -->
+    <div class="slide" id="s9">
+      <div class="tag" style="background:var(--daka-red)">Riesgo Crítico · Calidad de Datos</div>
+      <h2>El Peligro de <span style="background:white;padding:0 10px;border-radius:8px;color:var(--daka-red)">Reutilizar
+          SKUs</span></h2>
+      <p style="max-width:850px;text-align:center;margin-bottom:30px">
+        Cuando SAP permite dar de alta un producto usando un código viejo porque "es el mismo aire",
+        <strong style="color:var(--daka-blue)">se destruye la trazabilidad externa.</strong>
+      </p>
+
+      <div class="card" style="max-width:960px;width:100%;border: 3px solid var(--daka-red); position: relative;">
+        <!-- Error Badge -->
+        <div
+          style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--daka-red); color: white; padding: 5px 20px; border-radius: 20px; font-weight: bold; font-size: 14px; box-shadow: 0 4px 10px rgba(227,0,15,0.4);">
+          CASO REAL: Código LB-0001 (Aire Acondicionado Modelo 5005)
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-top: 20px; gap: 40px;">
+          <!-- Compra 2025 -->
+          <div style="flex:1;">
+            <div
+              style="background:rgba(0,48,135,0.05); padding: 10px; border-radius: 8px; text-align: center; font-weight: bold; color: var(--daka-blue); margin-bottom: 15px;">
+              Compra Inicial (Año 2025)
+            </div>
+            <ul style="list-style: none; padding: 0;">
+              <li style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size:24px">📦</span>
+                <div><strong style="display:block; font-size: 13px; color: var(--daka-blue);">Empaque:</strong> <span
+                    style="font-size: 14px; color: var(--muted);">Caja Marrón Estándar</span></div>
+              </li>
+              <li style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size:24px">🎨</span>
+                <div><strong style="display:block; font-size: 13px; color: var(--daka-blue);">Arte Web:</strong> <span
+                    style="font-size: 14px; color: var(--muted);">Fotos V1 (Sin control smart)</span></div>
+              </li>
+              <li style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size:24px">🛡️</span>
+                <div><strong style="display:block; font-size: 13px; color: var(--daka-blue);">Garantía:</strong> <span
+                    style="font-size: 14px; color: var(--muted);">6 Meses Tienda</span></div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Flecha de error -->
+          <div
+            style="display:flex; flex-direction:column; justify-content:center; align-items:center; margin-top: 40px;">
+            <div style="font-size: 32px; color: var(--daka-red);">⚠️</div>
+            <div style="font-size: 12px; font-weight: bold; color: var(--daka-red); text-align: center;">
+              CONSERVAN<br>CÓDIGO</div>
+            <div style="height: 2px; width: 60px; background: var(--daka-red); position: relative;">
+              <div
+                style="position: absolute; right: 0; top: -4px; border-left: 5px solid var(--daka-red); border-top: 5px solid transparent; border-bottom: 5px solid transparent;">
+              </div>
+            </div>
+          </div>
+
+          <!-- Compra 2026 -->
+          <div style="flex:1;">
+            <div
+              style="background:rgba(227,0,15,0.05); padding: 10px; border-radius: 8px; text-align: center; font-weight: bold; color: var(--daka-red); margin-bottom: 15px; border: 1px solid rgba(227,0,15,0.2);">
+              Nueva Compra (Año 2026)
+            </div>
+            <ul style="list-style: none; padding: 0;">
+              <li style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size:24px">🎁</span>
+                <div><strong style="display:block; font-size: 13px; color: var(--daka-red);">Empaque:</strong> <span
+                    style="font-size: 14px; color: var(--muted);"><del>Caja Marrón</del> <br><strong>Full Color (Cambian
+                      dimensiones)</strong></span></div>
+              </li>
+              <li style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size:24px">📸</span>
+                <div><strong style="display:block; font-size: 13px; color: var(--daka-red);">Arte Web:</strong> <span
+                    style="font-size: 14px; color: var(--muted);"><del>Fotos V1</del> <br><strong>Fotos V2 + Control
+                      Smart</strong></span></div>
+              </li>
+              <li style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size:24px">📜</span>
+                <div><strong style="display:block; font-size: 13px; color: var(--daka-red);">Garantía:</strong> <span
+                    style="font-size: 14px; color: var(--muted);"><del>6 Meses</del> <br><strong>12 Meses
+                      Fabricante</strong></span></div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="margin-top: 24px; background: white; padding: 16px 24px; border-radius: 12px; border-left: 6px solid var(--daka-blue); max-width: 960px; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        <span style="font-size: 32px;">💡</span>
+        <p style="font-size: 14px; color: var(--text); line-height: 1.5; margin: 0;">
+          <strong>Solución MDM:</strong> El <em>Golden Record</em> compara las variaciones físicas y comerciales con las
+          versiones anteriores. Si detecta empates de código pero discrepancias en logística o garantías,
+          <strong style="color:var(--daka-red)">bloquea la mezcla de inventarios de distintas generaciones en la
+            Web</strong>.
+        </p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════ SLIDE 10: BENEFICIOS LEAFIO / WMS / TMS ═══════════════════ -->
     <div class="slide" id="s9">
       <div class="tag">Impacto · Sistemas de Cadena de Suministro</div>
       <h2>Impacto en <span class="green">Leafio</span>, <span class="blue">WMS</span>, <span class="purple">TMS</span> y
@@ -1327,7 +1425,7 @@
 
   <script>
     const slides = document.querySelectorAll('.slide');
-    const titles = ['Portada', 'Estado Actual', 'Problemática', 'Golden Record', 'Arquitectura', 'Gobierno', 'Roadmap', 'Resultados', 'Implementación', 'Beneficios', 'E-Commerce', 'TI: Arquitectura', 'TI: Gobernanza'];
+    const titles = ['Portada', 'Estado Actual', 'Problemática', 'Golden Record', 'Arquitectura', 'Gobierno', 'Roadmap', 'Resultados', 'Implementación', 'Riesgo Reuso SKU', 'Beneficios', 'E-Commerce', 'TI: Arquitectura', 'TI: Gobernanza'];
     let cur = 0;
 
     function goto(n) {
